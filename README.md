@@ -24,13 +24,10 @@ We welcome contributions from the community. Please refer to the contribution gu
 ## License
 Autopaperwork is released under the [Affero GPL v3](https://opensource.org/license/agpl-v3).
 
-## Support
-For assistance or inquiries, contact us at [support@autopaperwork.com](mailto:support@autopaperwork.com).
+
 
 ## Disclaimer
 While Autopaperwork strives to provide accurate and reliable services, it is your responsibility to review and verify generated documents before use.
 
-## Stay Connected
-Follow us on [Twitter](https://twitter.com/autopaperwork) and [LinkedIn](https://www.linkedin.com/company/autopaperwork) for updates.
 
 Thank you for choosing Autopaperwork!
