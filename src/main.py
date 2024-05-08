@@ -18,11 +18,26 @@ output_parser = StrOutputParser()
 embeddings = OllamaEmbeddings()
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=2000,
-    chunk_overlap=100,
+    separators=[
+        "\n\n",
+        "\n",
+        " ",
+        ".",
+        ",",
+        "\u200b",  # Zero-width space
+        "\uff0c",  # Fullwidth comma
+        "\u3001",  # Ideographic comma
+        "\uff0e",  # Fullwidth full stop
+        "\u3002",  # Ideographic full stop
+        "",
+    ],
+    chunk_size=500,
+    chunk_overlap=10,
     length_function=len,
     is_separator_regex=False,)
+
 documents = text_splitter.split_documents(docs)
+print(documents)
 vector = FAISS.from_documents(documents, embeddings)
 
 retriever = vector.as_retriever()
@@ -39,5 +54,5 @@ document_chain = create_stuff_documents_chain(llm, prompt)
 
 retrieval_chain = create_retrieval_chain(retriever, document_chain)
 
-response = retrieval_chain.invoke({"input": "que paso en la primera tetrarquia?"})
+response = retrieval_chain.invoke({"input": "cuentame todo lo que sepas de la primera tetrarquia"})
 print(response["answer"])
