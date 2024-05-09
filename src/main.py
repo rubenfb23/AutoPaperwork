@@ -1,3 +1,4 @@
+import sys
 from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -7,11 +8,30 @@ from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
+from langchain_community.document_loaders.csv_loader import CSVLoader
+
+
+def receive_user_input():
+    if len(sys.argv) > 1:
+        prompt_text = ' '.join(sys.argv[1:])
+    else:
+        prompt_text = "Cuentame quien eres brevemente y, al acabar, dime *que puedo hacer por ti*"
+    return prompt_text
+
+
+def load_a_website(website_url):
+    loader = WebBaseLoader(website_url)
+    docs = loader.load()
+    return docs
+
+
+def load_a_csv(csv_path):
+    loader = CSVLoader(csv_path)
+    docs = loader.load()
+    return docs
+
 
 llm = Ollama(model="llama3:instruct")
-
-loader = WebBaseLoader("https://es.wikipedia.org/wiki/Constantino_I")
-docs = loader.load()
 
 output_parser = StrOutputParser()
 
@@ -31,28 +51,42 @@ text_splitter = RecursiveCharacterTextSplitter(
         "\u3002",  # Ideographic full stop
         "",
     ],
-    chunk_size=500,
+    chunk_size=100,
     chunk_overlap=10,
     length_function=len,
     is_separator_regex=False,)
 
+docs = load_a_website("https://es.wikipedia.org/wiki/Menacer")
+print("Loaded CSV")
+
 documents = text_splitter.split_documents(docs)
-print(documents)
+print("Document splitted")
+
 vector = FAISS.from_documents(documents, embeddings)
+print("Vector created")
 
 retriever = vector.as_retriever()
+print("Retriever created")
 
-prompt = ChatPromptTemplate.from_template("""Answer the following question in spanish based only on the provided context:
+prompt = ChatPromptTemplate.from_template(
+"""Respond only in spanish. You are called AutoPaperwork, first of all, present yourself with shortly. Read the context carefully and with attention. Then, do what the input tells you to do based only on the context:
 
 <context>
 {context}
 </context>
 
 Question: {input}""")
+print("Prompt created")
 
 document_chain = create_stuff_documents_chain(llm, prompt)
+print("Document chain created")
 
 retrieval_chain = create_retrieval_chain(retriever, document_chain)
+print("Retrieval chain created")
 
-response = retrieval_chain.invoke({"input": "cuentame todo lo que sepas de la primera tetrarquia"})
+prompt_text = receive_user_input()
+print("Prompt text:")
+
+response = retrieval_chain.invoke({"input": prompt_text})
+print("Response:")
 print(response["answer"])
