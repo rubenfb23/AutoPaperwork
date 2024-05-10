@@ -3,8 +3,8 @@ from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_community.document_loaders import WebBaseLoader
-from langchain_community.embeddings import OllamaEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings.ollama import OllamaEmbeddings
+from langchain_community.vectorstores.faiss import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
@@ -22,12 +22,14 @@ def receive_user_input():
 def load_a_website(website_url):
     loader = WebBaseLoader(website_url)
     docs = loader.load()
+    print("Loaded website")
     return docs
 
 
 def load_a_csv(csv_path):
     loader = CSVLoader(csv_path)
     docs = loader.load()
+    print("Loaded CSV")
     return docs
 
 
@@ -35,7 +37,9 @@ llm = Ollama(model="llama3:instruct")
 
 output_parser = StrOutputParser()
 
-embeddings = OllamaEmbeddings()
+embeddings = OllamaEmbeddings(
+                model="nomic-embed-text",
+            )
 
 text_splitter = RecursiveCharacterTextSplitter(
     separators=[
@@ -56,14 +60,14 @@ text_splitter = RecursiveCharacterTextSplitter(
     length_function=len,
     is_separator_regex=False,)
 
-docs = load_a_website("https://es.wikipedia.org/wiki/Menacer")
-print("Loaded CSV")
+docs = load_a_website("https://es.wikipedia.org/wiki/Seann_William_Scott")
 
 documents = text_splitter.split_documents(docs)
 print("Document splitted")
 
 vector = FAISS.from_documents(documents, embeddings)
 print("Vector created")
+
 
 retriever = vector.as_retriever()
 print("Retriever created")
