@@ -1,1 +1,3 @@
 .vscode/settings.json
+src/vector_store/index.faiss
+src/vector_store/index.pkl
