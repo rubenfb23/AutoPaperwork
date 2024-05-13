@@ -1,15 +1,14 @@
 import sys
+import DocumentLoader
+import TextProcessor
 from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.embeddings.ollama import OllamaEmbeddings
 from langchain_community.vectorstores.faiss import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
-from langchain_community.document_loaders.csv_loader import CSVLoader
-import sys
 
 
 def receive_user_input():
@@ -27,41 +26,6 @@ def receive_user_input():
     else:
         prompt_text = "Cuentame quien eres brevemente y, al acabar, dime *que puedo hacer por ti*"
     return prompt_text
-
-
-def load_a_website(website_url):
-    """
-    Loads a website and returns the loaded documents.
-
-    Args:
-        website_url (str): The URL of the website to load.
-
-    Returns:
-        list: A list of loaded documents.
-
-    """
-    loader = WebBaseLoader(website_url)
-    docs = loader.load()
-    print("Loaded website")
-    return docs
-
-
-def load_a_csv(csv_path):
-    """
-    Load a CSV file and return the loaded documents.
-
-    Args:
-        csv_path (str): The path to the CSV file.
-
-    Returns:
-        list: A list of loaded documents.
-
-    """
-    loader = CSVLoader(csv_path)
-    docs = loader.load()
-    print("Loaded CSV")
-    return docs
-
 
 # Choose the model you want to use for LLM
 llm = Ollama(model="llama3:instruct")
@@ -94,7 +58,7 @@ text_splitter = RecursiveCharacterTextSplitter(
     is_separator_regex=False,)
 
 # Load the documents from a website
-docs = load_a_website("https://www.who.int/es/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health")
+docs = DocumentLoader.WebDocumentLoader("https://en.wikipedia.org/wiki/Python_(programming_language)").load()
 
 # Load the documents from a CSV file
 documents = text_splitter.split_documents(docs)
@@ -104,17 +68,16 @@ print("Document splitted")
 vector = FAISS.from_documents(documents, embeddings)
 print("Vector created")
 
-# Save the vector store
-vector.save_local("vector_store")
-print("Vector saved")
-
 # Load the vector store
-retriever = vector.as_retriever()
+retriever = vector.as_retriever(
+    search_type="mmr",
+    search_kwargs={'k': 5, 'fetch_k': 50}
+)
 print("Retriever created")
 
 # Create a prompt
 prompt = ChatPromptTemplate.from_template(
-"""Respond only in spanish. You are called AutoPaperwork and you are an expert on air quality, first of all, present yourself shortly. Read the context carefully and with attention. Then, do what the input tells you to do based only on the context:
+"""Respond only in spanish. You are called AutoPaperwork and you are an expert on wikipedia searching, first of all, present yourself shortly. Read the context carefully and with attention. Then, do what the input tells you to do based only on the context:
 
 <context>
 {context}
@@ -132,7 +95,6 @@ print("Retrieval chain created")
 
 # Receive user input
 prompt_text = receive_user_input()
-print("Prompt text:")
 
 # Invoke the retrieval chain
 response = retrieval_chain.invoke({"input": prompt_text})
