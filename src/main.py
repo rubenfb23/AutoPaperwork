@@ -1,7 +1,7 @@
 import sys
-from document_loaders import DocumentLoader
-from text_processors import TextProcessor
-from vector_stores import VectorStore
+from document_loaders import WebDocumentLoader
+from text_processors import RCTS
+from vector_stores import FAISSVectorStore
 from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.embeddings.ollama import OllamaEmbeddings
@@ -35,7 +35,7 @@ embeddings = OllamaEmbeddings(
             )
 
 # Choose the text splitter you want to use
-text_splitter = TextProcessor.RCTS(
+text_splitter = RCTS(
     separators=[".", "!", "?", "\n"],
     chunk_size=100,
     chunk_overlap=20,
@@ -43,14 +43,14 @@ text_splitter = TextProcessor.RCTS(
 )
 
 # Load the documents from a website (in this case)
-crude_docs = DocumentLoader.WebDocumentLoader("https://es.wikipedia.org/wiki/Felipe_I_de_Tarento").load()
+crude_docs = WebDocumentLoader("https://es.wikipedia.org/wiki/Felipe_I_de_Tarento").load()
 
 # Split the documents into chunks
 splitted_documents = text_splitter.process(crude_docs)
 print("Document splitted")
 
 # Create a vector store
-vector = VectorStore.FAISSVectorStore(embeddings).initialize(splitted_documents)
+vector = FAISSVectorStore(embeddings).initialize(splitted_documents)
 print("Vector created")
 
 # Load the vector store

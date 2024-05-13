@@ -1,8 +1,8 @@
-import DocumentLoader
+import DocumentLoaderBase
 from langchain_community.document_loaders import WebBaseLoader
 
 
-class WebDocumentLoader(DocumentLoader):
+class WebDocumentLoader(DocumentLoaderBase):
     """
     Concrete implementation of a document loader for web documents.
 

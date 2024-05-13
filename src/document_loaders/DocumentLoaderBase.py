@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class DocumentLoader(ABC):
+class DocumentLoaderBase(ABC):
     """
     Abstract base class for document loaders.
 

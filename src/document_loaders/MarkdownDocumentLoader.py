@@ -1,8 +1,8 @@
-import DocumentLoader
+import document_loaders.DocumentLoaderBase as DocumentLoaderBase
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
 
 
-class MarkdownDocumentLoader(DocumentLoader):
+class MarkdownDocumentLoader(DocumentLoaderBase):
     """
     Concrete implementation of a document loader for Markdown files.
     """

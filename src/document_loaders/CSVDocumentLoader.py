@@ -1,8 +1,8 @@
-import DocumentLoader
+import document_loaders.DocumentLoaderBase as DocumentLoaderBase
 from langchain_community.document_loaders import CSVLoader
 
 
-class CSVDocumentLoader(DocumentLoader):
+class CSVDocumentLoader(DocumentLoaderBase):
     """
     Concrete implementation of a document loader for CSV files.
     """

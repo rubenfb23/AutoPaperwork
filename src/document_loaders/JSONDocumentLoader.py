@@ -1,8 +1,8 @@
-import DocumentLoader
+import document_loaders.DocumentLoaderBase as DocumentLoaderBase
 from langchain_community.document_loaders import JSONLoader
 
 
-class JSONDocumentLoader(DocumentLoader):
+class JSONDocumentLoader(DocumentLoaderBase):
     """
     Concrete implementation of a document loader for JSON files.
 
