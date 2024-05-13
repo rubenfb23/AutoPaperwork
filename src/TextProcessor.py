@@ -70,14 +70,14 @@ class RCTS(TextProcessor):
 
     def process(self, documents):
         processed_docs = []
-        for doc in documents:
-            processed_docs.extend(RecursiveCharacterTextSplitter(
-                separators=self.separators,
-                chunk_size=self.chunk_size,
-                chunk_overlap=self.chunk_overlap,
-                length_function=self.length_function,
-                is_separator_regex=self.is_separator_regex
-            ).split_documents(doc))
+        processed_docs.extend(RecursiveCharacterTextSplitter(
+            separators=self.separators,
+            chunk_size=self.chunk_size,
+            chunk_overlap=self.chunk_overlap,
+            length_function=self.length_function,
+            is_separator_regex=self.is_separator_regex
+        ).split_documents(documents))
+        print("Document splitted")
         return processed_docs
 
 

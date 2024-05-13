@@ -1,6 +1,7 @@
 import sys
 import DocumentLoader
 import TextProcessor
+import VectorStore
 from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -52,7 +53,7 @@ splitted_documents = text_splitter.process(crude_docs)
 print("Document splitted")
 
 # Create a vector store
-vector = FAISS.from_documents(splitted_documents, embeddings)
+vector = VectorStore.FAISSVectorStore(embeddings).initialize(splitted_documents)
 print("Vector created")
 
 # Load the vector store
