@@ -1,4 +1,4 @@
-import TextProcessor
+from .TextProcessor import TextProcessor
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 

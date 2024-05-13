@@ -1,4 +1,4 @@
-import TextProcessor
+from .TextProcessor import TextProcessor
 import json
 from langchain_text_splitters import RecursiveJsonSplitter
 

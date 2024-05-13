@@ -1,4 +1,4 @@
-import VectorStore
+from .VectorStore import VectorStore
 from langchain_community.vectorstores.faiss import FAISS
 
 

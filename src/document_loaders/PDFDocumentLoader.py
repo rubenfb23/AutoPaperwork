@@ -1,5 +1,6 @@
-import document_loaders.DocumentLoaderBase as DocumentLoaderBase
+from .DocumentLoaderBase import DocumentLoaderBase
 from langchain_community.document_loaders import PyPDFLoader
+
 
 class PDFDocumentLoader(DocumentLoaderBase):
     """

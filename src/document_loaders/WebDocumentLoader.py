@@ -1,4 +1,4 @@
-import DocumentLoaderBase
+from .DocumentLoaderBase import DocumentLoaderBase
 from langchain_community.document_loaders import WebBaseLoader
 
 
