@@ -1,12 +1,10 @@
 import sys
-import DocumentLoader
-import TextProcessor
-import VectorStore
+from document_loaders import DocumentLoader
+from text_processors import TextProcessor
+from vector_stores import VectorStore
 from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 from langchain_community.embeddings.ollama import OllamaEmbeddings
-from langchain_community.vectorstores.faiss import FAISS
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
 
@@ -31,13 +29,12 @@ def receive_user_input():
 # Choose the model you want to use for LLM
 llm = Ollama(model="llama3:instruct")
 
-output_parser = StrOutputParser()
-
 # Choose the model you want to use for embeddings
 embeddings = OllamaEmbeddings(
                 model="nomic-embed-text",
             )
 
+# Choose the text splitter you want to use
 text_splitter = TextProcessor.RCTS(
     separators=[".", "!", "?", "\n"],
     chunk_size=100,
@@ -45,10 +42,10 @@ text_splitter = TextProcessor.RCTS(
     length_function=len
 )
 
-# Load the documents from a website
-crude_docs = DocumentLoader.WebDocumentLoader("https://en.wikipedia.org/wiki/Python_(programming_language)").load()
+# Load the documents from a website (in this case)
+crude_docs = DocumentLoader.WebDocumentLoader("https://es.wikipedia.org/wiki/Felipe_I_de_Tarento").load()
 
-# Load the documents from a CSV file
+# Split the documents into chunks
 splitted_documents = text_splitter.process(crude_docs)
 print("Document splitted")
 
