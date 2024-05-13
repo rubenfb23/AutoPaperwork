@@ -27,6 +27,7 @@ def receive_user_input():
         prompt_text = "Cuentame quien eres brevemente y, al acabar, dime *que puedo hacer por ti*"
     return prompt_text
 
+
 # Choose the model you want to use for LLM
 llm = Ollama(model="llama3:instruct")
 
@@ -37,35 +38,22 @@ embeddings = OllamaEmbeddings(
                 model="nomic-embed-text",
             )
 
-# Choose the text splitter you want to use
-text_splitter = RecursiveCharacterTextSplitter(
-    separators=[
-        "\n\n",
-        "\n",
-        " ",
-        ".",
-        ",",
-        "\u200b",  # Zero-width space
-        "\uff0c",  # Fullwidth comma
-        "\u3001",  # Ideographic comma
-        "\uff0e",  # Fullwidth full stop
-        "\u3002",  # Ideographic full stop
-        "",
-    ],
+text_splitter = TextProcessor.RCTS(
+    separators=[".", "!", "?", "\n"],
     chunk_size=100,
-    chunk_overlap=10,
-    length_function=len,
-    is_separator_regex=False,)
+    chunk_overlap=20,
+    length_function=len
+)
 
 # Load the documents from a website
-docs = DocumentLoader.WebDocumentLoader("https://en.wikipedia.org/wiki/Python_(programming_language)").load()
+crude_docs = DocumentLoader.WebDocumentLoader("https://en.wikipedia.org/wiki/Python_(programming_language)").load()
 
 # Load the documents from a CSV file
-documents = text_splitter.split_documents(docs)
+splitted_documents = text_splitter.process(crude_docs)
 print("Document splitted")
 
 # Create a vector store
-vector = FAISS.from_documents(documents, embeddings)
+vector = FAISS.from_documents(splitted_documents, embeddings)
 print("Vector created")
 
 # Load the vector store
