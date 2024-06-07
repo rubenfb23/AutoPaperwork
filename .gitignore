@@ -2,3 +2,4 @@
 src/vector_store/index.faiss
 src/vector_store/index.pkl
 __pycache__/
+*.pyc
