@@ -1,6 +1,5 @@
 .vscode/settings.json
 src/vector_store/index.faiss
 src/vector_store/index.pkl
-src/__pycache__/DocumentLoader.cpython-310.pyc
-src/__pycache__/TextProcessor.cpython-310.pyc
-src/__pycache__/VectorStore.cpython-310.pyc
+__pycache__/
+*.pyc
