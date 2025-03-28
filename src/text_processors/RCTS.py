@@ -42,5 +42,5 @@ class RCTS(TextProcessor):
             length_function=self.length_function,
             is_separator_regex=self.is_separator_regex
         ).split_documents(documents))
-        print("Document splitted")
+        print("Documents split")
         return processed_docs
