@@ -22,7 +22,7 @@ def receive_user_input():
     if len(sys.argv) > 1:
         prompt_text = ' '.join(sys.argv[1:])
     else:
-        prompt_text = "Cuentame quien eres brevemente y, al acabar, dime *que puedo hacer por ti*"
+        prompt_text = "Cuéntame quien eres brevemente y, al acabar, dime *que puedo hacer por ti*"
     return prompt_text
 
 
