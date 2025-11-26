@@ -18,7 +18,8 @@ Autopaperwork is an innovative tool designed to streamline the process of docume
    ```
    git clone https://github.com/autopaperwork.git
    ```
-2. **Setup Environment:** Follow the documentation to set up the Autopaperwork environment.
+2. **Setup Environment:**
+    - Install required dependencies.
 3. **Explore Documentation:** Understand available functionalities, customization options, and integration methods.
 4. **Integrate Autopaperwork:** Choose the integration method and integrate Autopaperwork into your systems or applications.
 5. **Generate Documents:** Start using Autopaperwork to automatically generate documents by providing input data.
